@@ -11,6 +11,9 @@ from sklearn.metrics import pairwise_distances # to perfrom cosine similarity
 from nltk import word_tokenize # to create tokens
 from nltk.corpus import stopwords # for stop words
 
+import tkinter as tk # For GUI
+from tkinter import Frame
+
 # Download if required
 '''
 nltk.download('punkt')
@@ -97,3 +100,25 @@ X = cv.fit_transform(df['Lemmatized_text']).toarray()
 features = cv.get_feature_names()
 df_bow = pd.DataFrame(X, columns = features)
 
+
+# Start of GUI confirguration
+root = tk.Tk()
+root.geometry('500x250+500+200')
+root.title('ChatBot')
+
+# Style border
+frame = Frame(root)
+frame.pack(pady=20)
+
+user_input = tk.Entry(root)
+user_input.pack()
+
+def chatbot(event):
+    user_text = user_input.get()
+    output.config(text=chat(user_text))
+
+user_input.bind("<Return>", chatbot)
+output = tk.Label(root, text='')
+output.pack()
+
+tk.mainloop()
