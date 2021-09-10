@@ -3,9 +3,9 @@
 Simple chatbot which can give simple conversation. Developed using NLTK and SKLearn.
 
 
-Model used is Bag of Words (BOW) model which reports best answer to the user's query from vector with best match.
+Created by using Bag of Words (BOW) model which reports best answer to the user's query from vector with best match.
 Notebook can be used to replicate development. 
 
 
-To run download `npl-chatbot.py` and the corpus `queries_and_responses.xlsx`. Use the function `chat()` to input queries and maintain the conversation
-
+To run download `npl-chatbot.py` and the corpus `queries_and_responses.xlsx`.
+Intuitive GUI (TKinter) enables to simply input queries or phrases into 'Chatbot' window to start the conversation.
