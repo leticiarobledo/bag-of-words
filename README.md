@@ -8,4 +8,4 @@ Notebook can be used to replicate development.
 
 
 To run download `npl-chatbot.py` and the corpus `queries_and_responses.xlsx`.
-Updated code enables intuitive GUI (TKinter). Simply input queries or phrases into 'Chatbot' window to start the conversation.
+Intuitive GUI (TKinter) enables to simply input queries or phrases into 'Chatbot' window to start the conversation.
