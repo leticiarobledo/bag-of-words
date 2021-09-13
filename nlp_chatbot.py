@@ -2,14 +2,12 @@
 
 import pandas as pd
 import nltk 
-import numpy as np
 import re
 # Text preprocessing and BoW model
 from nltk.stem import wordnet # to perform lemmatization
 from nltk import pos_tag # parts of speech
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import pairwise_distances # cosine similarity
-from nltk import word_tokenize
 from nltk.corpus import stopwords # for stop words
 # GUI
 import tkinter as tk
