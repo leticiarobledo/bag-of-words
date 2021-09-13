@@ -4,14 +4,15 @@ import pandas as pd
 import nltk 
 import numpy as np
 import re
+# Text preprocessing and BoW model
 from nltk.stem import wordnet # to perform lemmatization
-from sklearn.feature_extraction.text import CountVectorizer # to perform bow
-from nltk import pos_tag # for parts of speech
-from sklearn.metrics import pairwise_distances # to perfrom cosine similarity
-from nltk import word_tokenize # to create tokens
+from nltk import pos_tag # parts of speech
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import pairwise_distances # cosine similarity
+from nltk import word_tokenize
 from nltk.corpus import stopwords # for stop words
-
-import tkinter as tk # For GUI
+# GUI
+import tkinter as tk
 from tkinter import Frame
 
 # Download if required
@@ -22,53 +23,39 @@ nltk.download('wordnet')
 nltk.download('stopwords') 
 '''
 
-# function that performs text normalization steps
+
+# Function that performs text normalization
 def normalization(text):
-    
-    text = str(text).lower() # text to lower case
-    clean_text = re.sub(r'[^ a-z]','',text) # removing special characters
+    clean_text = re.sub(r'[^ a-z]','',text.lower()) # remove special characters
     tokens = nltk.word_tokenize(clean_text) # word tokenizing
+    tags = pos_tag(tokens, tagset=None) # parts of speech
     
-    lema = wordnet.WordNetLemmatizer() # intializing lemmatization
-    lema_words = []
+    return classify(tags, [])
     
-    tags_list = pos_tag(tokens,tagset=None) # parts of speech
     
-    # Lemmatize all the words in given sentence by assigning correct category
-    for token,syntactic_func in tags_list:
-        if syntactic_func.startswith('V'):  # Verb
-            pos_val = 'v'
-        elif syntactic_func.startswith('J'): # Adj
-            pos_val = 'a'
-        elif syntactic_func.startswith('R'): # Adverb
-            pos_val = 'r'
-        else:
-            pos_val = 'n' # Noun
-        lemmatized_word = lema.lemmatize(token, pos_val) # lemmatize
-        lema_words.append(lemmatized_word) # appending the lemmatized token
-    
-    return " ".join(lema_words) # returns the lemmatized tokens as a sentence 
-
-
-# Function to remove stop words and process (normalize) the corpus
-def stopword_(text):      
-    lema = wordnet.WordNetLemmatizer() # intializing lemmatization
-    lema_words = []
-    
+# Function to remove stop words and normalize text
+def stopword_normalize(text):      
     tokens = nltk.word_tokenize(text) # word tokenizing
-    tags_list = pos_tag(tokens,tagset=None) # parts of speech
-    
+    tags = pos_tag(tokens,tagset=None) # parts of speech
     words_to_remove = stopwords.words('english')
     
+    return classify(tags, words_to_remove)
+    
+    
+# Auxiliary function that performs text normalization
+def classify(tags, words_to_remove):
+    lema = wordnet.WordNetLemmatizer() # intializing lemmatization
+    lema_words = []
+    
     # Lemmatize all the words in given sentence by assigning correct category
-    for token,syntactic_func in tags_list:
+    for token,syntactic_function in tags:
         if token in words_to_remove:
             continue
-        if syntactic_func.startswith('V'):  # Verb
+        if syntactic_function.startswith('V'):  # Verb
             pos_val = 'v'
-        elif syntactic_func.startswith('R'): # Adverb
+        elif syntactic_function.startswith('R'): # Adverb
             pos_val = 'r'
-        elif syntactic_func.startswith('J'): # Adj
+        elif syntactic_function.startswith('J'): # Adj
             pos_val = 'a'
         else:
             pos_val = 'n' # Noun
@@ -80,12 +67,15 @@ def stopword_(text):
 
 # function that returns response to query using BOW model
 def chat(text):
-    s = stopword_(text)
-    lemma = normalization(s) # calling the function to perform text normalization
-    bow = cv.transform([lemma]).toarray() # applying bow
-    cosine_value = 1- pairwise_distances(df_bow,bow, metric = 'cosine' )
-    index_value = cosine_value.argmax() # getting index value 
-    return df['Text Response'].loc[index_value]
+    clean_text = stopword_normalize(text)
+    lemma = normalization(clean_text) 
+    # create BoW model
+    bow = cv.transform([lemma]).toarray()
+    cosine_value = 1 - pairwise_distances(df_bow,bow, metric = 'cosine' )
+    # get largest (cosine similarity) value
+    index_value = cosine_value.argmax()
+    best_match = df['Text Response'].loc[index_value]
+    return best_match
 
 
 # Preprocess corpus
