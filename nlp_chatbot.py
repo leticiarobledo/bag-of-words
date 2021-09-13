@@ -65,8 +65,8 @@ def classify(tags, words_to_remove):
     return " ".join(lema_words) # returns the lemmatized tokens as a sentence 
 
 
-# function that returns response to query using BOW model
-def chat(text):
+# Function that returns response to query using BOW model
+def chatbot(text):
     clean_text = stopword_normalize(text)
     lemma = normalization(clean_text) 
     # create BoW model
@@ -103,11 +103,12 @@ frame.pack(pady=20)
 user_input = tk.Entry(root)
 user_input.pack()
 
-def chatbot(event):
+# Function to maintain conversation 
+def chat(event):
     user_text = user_input.get()
-    output.config(text=chat(user_text))
+    output.config(text=chatbot(user_text))
 
-user_input.bind("<Return>", chatbot)
+user_input.bind("<Return>", chat)
 output = tk.Label(root, text='')
 output.pack()
 
